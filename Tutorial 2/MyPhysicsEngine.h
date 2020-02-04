@@ -50,6 +50,9 @@ namespace PhysicsEngine
 		{
 			px_scene->setVisualizationParameter(PxVisualizationParameter::eSCALE, 1.0f);
 			px_scene->setVisualizationParameter(PxVisualizationParameter::eCOLLISION_SHAPES, 1.0f);
+			//px_scene->setVisualizationParameter(PxVisualizationParameter::eWORLD_AXES, 1.f);
+			px_scene->setVisualizationParameter(PxVisualizationParameter::eBODY_AXES, 1.f);
+			px_scene->setVisualizationParameter(PxVisualizationParameter::eBODY_LIN_VELOCITY, 1.f);
 		}
 
 		//Custom scene initialisation
