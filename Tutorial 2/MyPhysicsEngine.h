@@ -41,6 +41,8 @@ namespace PhysicsEngine
 	{
 		Plane* plane;
 		Box* box;
+		Sphere* sphere;
+		Capsule* capsule;
 
 	public:
 		///A custom scene class
@@ -64,6 +66,14 @@ namespace PhysicsEngine
 			box = new Box(PxTransform(PxVec3(.0f,10.f,.0f)));
 			box->Color(color_palette[0]);
 			Add(box);
+
+			sphere = new Sphere(PxTransform(PxVec3(5.f, 15.f, .0f)));
+			sphere->Color(PxVec3(66.f / 255.f, 135.f / 255.f, 245 / 255.f));
+			Add(sphere);
+
+			capsule = new Capsule(PxTransform(PxVec3(10.f, 10.f, .0f)));
+			capsule->Color(PxVec3(120 / 255.f, 237 / 255.f, 104 / 255.f));
+			Add(capsule);
 		}
 
 		//Custom udpate function
