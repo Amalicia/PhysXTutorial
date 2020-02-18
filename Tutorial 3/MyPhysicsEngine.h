@@ -57,7 +57,7 @@ namespace PhysicsEngine
 		Trampoline(const PxVec3& dimensions=PxVec3(1.f,1.f,1.f), PxReal stiffness=1.f, PxReal damping=1.f)
 		{
 			PxReal thickness = .1f;
-			bottom = new Box(PxTransform(PxVec3(0.f,thickness,0.f)),PxVec3(dimensions.x,thickness,dimensions.z));
+			bottom = new Box(PxTransform(PxVec3(0.f,thickness,0.f)),PxVec3(dimensions.x,thickness,dimensions.z), PxReal(50.f));
 			top = new Box(PxTransform(PxVec3(0.f,dimensions.y+thickness,0.f)),PxVec3(dimensions.x,thickness,dimensions.z));
 			springs.resize(4);
 			springs[0] = new DistanceJoint(bottom, PxTransform(PxVec3(dimensions.x,thickness,dimensions.z)), top, PxTransform(PxVec3(dimensions.x,-dimensions.y,dimensions.z)));
@@ -185,7 +185,7 @@ namespace PhysicsEngine
 	class MyScene : public Scene
 	{
 		Plane* plane;
-		Box* box, * box2;
+		Box* box, * box2, *box3, *box4, *box5, *box6, *box7;
 		MySimulationEventCallback* my_callback;
 		
 	public:
@@ -198,6 +198,8 @@ namespace PhysicsEngine
 		{
 			px_scene->setVisualizationParameter(PxVisualizationParameter::eSCALE, 1.0f);
 			px_scene->setVisualizationParameter(PxVisualizationParameter::eCOLLISION_SHAPES, 1.0f);
+			px_scene->setVisualizationParameter(PxVisualizationParameter::eJOINT_LOCAL_FRAMES, 1.f);
+			px_scene->setVisualizationParameter(PxVisualizationParameter::eJOINT_LIMITS, 1.f);
 		}
 
 		//Custom scene initialisation
@@ -215,23 +217,62 @@ namespace PhysicsEngine
 			plane->Color(PxVec3(210.f/255.f,210.f/255.f,210.f/255.f));
 			Add(plane);
 
-			box = new Box(PxTransform(PxVec3(.0f,.5f,.0f)));
+			box = new Box(PxTransform(PxVec3(.0f,0.5f,.0f)), PxVec3(0.5f, .5f, .5f), PxReal(0.1f));
 			box->Color(color_palette[0]);
 			//set collision filter flags
-			// box->SetupFiltering(FilterGroup::ACTOR0, FilterGroup::ACTOR1);
+			//box->SetupFiltering(FilterGroup::ACTOR0, FilterGroup::ACTOR1);
 			//use | operator to combine more actors e.g.
-			// box->SetupFiltering(FilterGroup::ACTOR0, FilterGroup::ACTOR1 | FilterGroup::ACTOR2);
+		/*	box->SetupFiltering(FilterGroup::ACTOR0, FilterGroup::ACTOR1 | FilterGroup::ACTOR2);*/
 			//don't forget to set your flags for the matching actor as well, e.g.:
-			// box2->SetupFiltering(FilterGroup::ACTOR1, FilterGroup::ACTOR0);
-			box->Name("Box1");
-			Add(box);
+			box2 = new Box(PxTransform(PxVec3(.0f, 5.f, .5f)), PxVec3(0.5f, .5f, .5f), PxReal(0.1f));
+			//box2->SetupFiltering(FilterGroup::ACTOR1, FilterGroup::ACTOR0);
+			box2->Color(color_palette[1]);
 
-			/*
+			box3 = new Box(PxTransform(PxVec3(.0f, 1.5f, .0f)), PxVec3(0.5f, .5f, .5f), PxReal(0.1f));
+			box4 = new Box(PxTransform(PxVec3(.0f, 2.5f, .0f)), PxVec3(0.5f, .5f, .5f), PxReal(0.1f));
+			box5 = new Box(PxTransform(PxVec3(.0f, 3.5f, .0f)), PxVec3(0.5f, .5f, .5f), PxReal(0.1f));
+			box6 = new Box(PxTransform(PxVec3(.0f, 4.5f, .0f)), PxVec3(0.5f, .5f, .5f), PxReal(0.1f));
+			box7 = new Box(PxTransform(PxVec3(.0f, 5.5f, .0f)), PxVec3(0.5f, .5f, .5f), PxReal(0.1f));
+
+			box2->Color(color_palette[1]);
+			box3->Color(color_palette[2]);
+			box4->Color(color_palette[3]);
+			box5->Color(color_palette[4]);
+			box6->Color(color_palette[0]);
+			box7->Color(color_palette[1]);
+			box->Name("Box1");
+			box2->Name("Box2");
+			box3->Name("Box2");
+			box4->Name("Box2");
+			box5->Name("Box2");
+			box6->Name("Box2");
+			box7->Name("Box2");
+			Add(box);
+			Add(box2);
+			Add(box3);
+			Add(box4);
+			Add(box5);
+			Add(box6);
+			Add(box7);
+
+			// Trampoline
+			/*box->Name("Box1");
+			Add(box);*/
+			/*Trampoline* trampoline = new Trampoline(PxVec3(5.f, 5.f, 5.f), PxReal(500.f), PxReal(0.01f));
+			trampoline->AddToScene(this);*/
+
+		
 			//joint two boxes together
 			//the joint is fixed to the centre of the first box, oriented by 90 degrees around the Y axis
 			//and has the second object attached 5 meters away along the Y axis from the first object.
-			RevoluteJoint joint(box, PxTransform(PxVec3(0.f,0.f,0.f),PxQuat(PxPi/2,PxVec3(0.f,1.f,0.f))), box2, PxTransform(PxVec3(0.f,5.f,0.f)));
-			*/
+			RevoluteJoint joint(box, PxTransform(PxVec3(0.f,0.f,0.f),PxQuat(PxPi/2,PxVec3(0.f,1.f,0.f))), box2, PxTransform(PxVec3(0.f,1.f,0.f)));
+			RevoluteJoint joint2(box2, PxTransform(PxVec3(0.f, 0.f, 0.f), PxQuat(PxPi / 2, PxVec3(0.f, 1.f, 0.f))), box3, PxTransform(PxVec3(0.f, 1.f, 0.f)));
+			RevoluteJoint joint3(box3, PxTransform(PxVec3(0.f, 0.f, 0.f), PxQuat(PxPi / 2, PxVec3(0.f, 1.f, 0.f))), box4, PxTransform(PxVec3(0.f, 1.f, 0.f)));
+			RevoluteJoint joint4(box4, PxTransform(PxVec3(0.f, 0.f, 0.f), PxQuat(PxPi / 2, PxVec3(0.f, 1.f, 0.f))), box5, PxTransform(PxVec3(0.f, 1.f, 0.f)));
+			RevoluteJoint joint5(box5, PxTransform(PxVec3(0.f, 0.f, 0.f), PxQuat(PxPi / 2, PxVec3(0.f, 1.f, 0.f))), box6, PxTransform(PxVec3(0.f, 1.f, 0.f)));
+			RevoluteJoint joint6(box6, PxTransform(PxVec3(0.f, 0.f, 0.f), PxQuat(PxPi / 2, PxVec3(0.f, 1.f, 0.f))), box7, PxTransform(PxVec3(0.f, 1.f, 0.f)));
+			
+			
 		}
 
 		//Custom udpate function
