@@ -185,8 +185,9 @@ namespace PhysicsEngine
 	class MyScene : public Scene
 	{
 		Plane* plane;
-		Box* box, * box2, *box3, *box4, *box5, *box6, *box7;
+		Box* box, * box2;//, *box3, *box4, *box5, *box6, *box7;
 		MySimulationEventCallback* my_callback;
+		Capsule* little, * big;
 		
 	public:
 		//specify your custom filter shader here
@@ -217,18 +218,18 @@ namespace PhysicsEngine
 			plane->Color(PxVec3(210.f/255.f,210.f/255.f,210.f/255.f));
 			Add(plane);
 
-			box = new Box(PxTransform(PxVec3(.0f,0.5f,.0f)), PxVec3(0.5f, .5f, .5f), PxReal(0.1f));
+			box = new Box(PxTransform(PxVec3(.0f,1.f,.0f)), PxVec3(0.5f, .5f, .5f), PxReal(100.0f));
 			box->Color(color_palette[0]);
 			//set collision filter flags
 			//box->SetupFiltering(FilterGroup::ACTOR0, FilterGroup::ACTOR1);
 			//use | operator to combine more actors e.g.
 		/*	box->SetupFiltering(FilterGroup::ACTOR0, FilterGroup::ACTOR1 | FilterGroup::ACTOR2);*/
 			//don't forget to set your flags for the matching actor as well, e.g.:
-			box2 = new Box(PxTransform(PxVec3(.0f, 5.f, .5f)), PxVec3(0.5f, .5f, .5f), PxReal(0.1f));
+			box2 = new Box(PxTransform(PxVec3(.0f, 2.f, .0f)), PxVec3(0.5f, .5f, .5f), PxReal(0.1f));
 			//box2->SetupFiltering(FilterGroup::ACTOR1, FilterGroup::ACTOR0);
 			box2->Color(color_palette[1]);
 
-			box3 = new Box(PxTransform(PxVec3(.0f, 1.5f, .0f)), PxVec3(0.5f, .5f, .5f), PxReal(0.1f));
+			/*box3 = new Box(PxTransform(PxVec3(.0f, 1.5f, .0f)), PxVec3(0.5f, .5f, .5f), PxReal(0.1f));
 			box4 = new Box(PxTransform(PxVec3(.0f, 2.5f, .0f)), PxVec3(0.5f, .5f, .5f), PxReal(0.1f));
 			box5 = new Box(PxTransform(PxVec3(.0f, 3.5f, .0f)), PxVec3(0.5f, .5f, .5f), PxReal(0.1f));
 			box6 = new Box(PxTransform(PxVec3(.0f, 4.5f, .0f)), PxVec3(0.5f, .5f, .5f), PxReal(0.1f));
@@ -253,7 +254,10 @@ namespace PhysicsEngine
 			Add(box4);
 			Add(box5);
 			Add(box6);
-			Add(box7);
+			Add(box7);*/
+
+			/*Add(box);		
+			Add(box2);*/
 
 			// Trampoline
 			/*box->Name("Box1");
@@ -261,18 +265,36 @@ namespace PhysicsEngine
 			/*Trampoline* trampoline = new Trampoline(PxVec3(5.f, 5.f, 5.f), PxReal(500.f), PxReal(0.01f));
 			trampoline->AddToScene(this);*/
 
+			// for null pointer joint
+			//Box* ptr = NULL;
 		
 			//joint two boxes together
 			//the joint is fixed to the centre of the first box, oriented by 90 degrees around the Y axis
 			//and has the second object attached 5 meters away along the Y axis from the first object.
-			RevoluteJoint joint(box, PxTransform(PxVec3(0.f,0.f,0.f),PxQuat(PxPi/2,PxVec3(0.f,1.f,0.f))), box2, PxTransform(PxVec3(0.f,1.f,0.f)));
-			RevoluteJoint joint2(box2, PxTransform(PxVec3(0.f, 0.f, 0.f), PxQuat(PxPi / 2, PxVec3(0.f, 1.f, 0.f))), box3, PxTransform(PxVec3(0.f, 1.f, 0.f)));
+			RevoluteJoint joint(box, PxTransform(PxVec3(0.f, 0.f, 0.f), PxQuat(PxPi / 2, PxVec3(0.f, 1.f, 0.f))), box2, PxTransform(PxVec3(0.f, 2.f, 0.f)));
+			/*RevoluteJoint joint2(box2, PxTransform(PxVec3(0.f, 0.f, 0.f), PxQuat(PxPi / 2, PxVec3(0.f, 1.f, 0.f))), box3, PxTransform(PxVec3(0.f, 1.f, 0.f)));
 			RevoluteJoint joint3(box3, PxTransform(PxVec3(0.f, 0.f, 0.f), PxQuat(PxPi / 2, PxVec3(0.f, 1.f, 0.f))), box4, PxTransform(PxVec3(0.f, 1.f, 0.f)));
 			RevoluteJoint joint4(box4, PxTransform(PxVec3(0.f, 0.f, 0.f), PxQuat(PxPi / 2, PxVec3(0.f, 1.f, 0.f))), box5, PxTransform(PxVec3(0.f, 1.f, 0.f)));
 			RevoluteJoint joint5(box5, PxTransform(PxVec3(0.f, 0.f, 0.f), PxQuat(PxPi / 2, PxVec3(0.f, 1.f, 0.f))), box6, PxTransform(PxVec3(0.f, 1.f, 0.f)));
-			RevoluteJoint joint6(box6, PxTransform(PxVec3(0.f, 0.f, 0.f), PxQuat(PxPi / 2, PxVec3(0.f, 1.f, 0.f))), box7, PxTransform(PxVec3(0.f, 1.f, 0.f)));
+			RevoluteJoint joint6(box6, PxTransform(PxVec3(0.f, 0.f, 0.f), PxQuat(PxPi / 2, PxVec3(0.f, 1.f, 0.f))), box7, PxTransform(PxVec3(0.f, 1.f, 0.f)));*/
+			//joint.DriveVelocity(joint.DriveVelocity());
+			/*joint.DriveVelocity(1.0f);
 			
-			
+			box2->Get()->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);*/
+
+			//setActorFlag(PxActorFlag::eDISABLE_GRAVITY, false);
+
+			little = new Capsule(PxTransform(PxVec3(0.f, 10.f, 0.f)), PxVec2(0.1f, 3.f));
+			little->Get()->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
+			Add(little);
+
+			big = new Capsule(PxTransform(PxVec3(3.f, 10.f, -0.2f)), PxVec2(0.1f, 6.f));
+			big->Get()->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
+			Add(big);
+
+			Capsule* ptr = NULL;
+
+			RevoluteJoint littleJoint(ptr, PxTransform(PxVec3(0.f, -1.5f, 0.f), PxQuat(PxPi / 2, PxVec3(0.f, 1.f, 0.f))), little, PxTransform(PxVec3(0.f, 0.f, 0.f)));
 		}
 
 		//Custom udpate function
